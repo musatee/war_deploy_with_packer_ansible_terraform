@@ -1,0 +1,36 @@
+---
+- name: This is a playbook for setting up minimal tomcat environment & apache as reverse proxy to tomcat service
+  hosts: default
+  become: true
+  tasks:
+  - block: 
+    - name: update cache
+      apt: 
+        update_cache: true
+    - name: install default-jdk as java dependancy
+      apt: 
+        name: default-jdk
+        state: present 
+    - name: create user to run java program
+      user: 
+        name: tomcat
+        create_home: true
+        home: /opt/tomcat
+        system: true
+        group: tomcat
+        shell: /bin/false 
+    - name: Download tomcat archive
+      get_url: 
+        url: https://downloads.apache.org/tomcat/tomcat-9/v9.0.71/bin/apache-tomcat-9.0.71.tar.gz
+        dest: /opt/apache-tomcat-9.0.71.tar.gz
+      register: result
+    - name: Untar the archive 
+      unarchive:
+        src: /opt/apache-tomcat-9.0.71.tar.gz
+        dest: /opt/tomcat 
+      when result.rc == 0 
+    - name: create a symbolic link 
+      command: ln -s /opt/tomcat/apache-tomcat-9.0.71 /opt/tomcat/updated
+  - block: 
+    - 
+    
