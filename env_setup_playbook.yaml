@@ -3,7 +3,8 @@
   hosts: default
   become: true
   tasks:
-  - block: 
+  - name: Setting up the minimal tomcat environment
+    block: 
     - name: update cache
       apt: 
         update_cache: true
@@ -31,6 +32,7 @@
       when result.rc == 0 
     - name: create a symbolic link 
       command: ln -s /opt/tomcat/apache-tomcat-9.0.71 /opt/tomcat/updated
-  - block: 
+  - name: setting up apache as a reverse proxy to tomcat service
+    block: 
     - 
     
