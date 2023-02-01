@@ -17,7 +17,7 @@
       #command: ln -s /etc/nginx/sites-available/tomcat.conf /etc/nginx/sites-enabled/
       file: 
         src: /etc/nginx/sites-available/tomcat.conf
-        dest: /etc/nginx/sites-enabled
+        dest: /etc/nginx/sites-enabled/tomcat.conf
         state: link 
         force: true
       notify: 
