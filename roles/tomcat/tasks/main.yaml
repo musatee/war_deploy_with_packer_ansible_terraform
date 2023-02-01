@@ -3,12 +3,12 @@
   - name: Setting up minimal tomcat environment
     block:
     - name: update cache
-      apt: 
+      yum: 
         update_cache: true
 
     - name: install default-jdk as java dependancy
-      apt: 
-        name: default-jdk
+      yum: 
+        name: java-1.8*
         state: present 
         
     - name: create tomcat group if not exists
@@ -40,14 +40,15 @@
 
     - name: assign permission to directory
       file: 
-        path: /opt/tomcat/*
+        path: /opt/tomcat/apache-tomcat-9.0.71
         state: directory
         recurse: yes
         owner: tomcat
-        mode: u=rwx,g=rx,o=rx
+        group: tomcat
+        mode: u=rwx,g=rwx,o=r
 
     - name: assign executable permission to all binaries
-      shell: chmod a+x /opt/tomcat/apache-tomcat-9.0.71/bin/*.sh 
+      shell: chmod u+x,g+x /opt/tomcat/apache-tomcat-9.0.71/bin/*.sh 
 
     - name: copy the tomcat.service file to system directory
       copy: 
