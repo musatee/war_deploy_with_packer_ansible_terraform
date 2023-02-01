@@ -10,6 +10,12 @@
       apt: 
         name: default-jdk
         state: present 
+        
+    - name: create tomcat group if not exists
+      group: 
+        name: tomcat
+        gid: 1900
+        state: present
 
     - name: create user to run java program
       user: 
@@ -19,16 +25,12 @@
         system: true
         group: tomcat
         shell: /bin/false 
+        uid: 1900
 
     - name: Download tomcat archive
       get_url: 
         url: https://downloads.apache.org/tomcat/tomcat-9/v9.0.71/bin/apache-tomcat-9.0.71.tar.gz
         dest: /opt/apache-tomcat-9.0.71.tar.gz
-
-    - name: create target untar directory
-      file: 
-        path: /opt/tomcat
-        state: directory
 
     - name: Untar the archive 
       unarchive:
@@ -36,22 +38,16 @@
         dest: /opt/tomcat
         remote_src: true
 
-    - name: create a symbolic link 
-      #command: ln -s /opt/tomcat/apache-tomcat-9.0.71 /opt/tomcat/updated
-      file: 
-        src: /opt/tomcat/apache-tomcat-9.0.71
-        dest: /opt/tomcat/updated
-        state: link
-
     - name: assign permission to directory
       file: 
         path: /opt/tomcat/*
         state: directory
         recurse: yes
         owner: tomcat
+        mode: u=rwx,g=rx,o=rx
 
     - name: assign executable permission to all binaries
-      shell: chmod +x /opt/tomcat/updated/bin/*.sh 
+      shell: chmod a+x /opt/tomcat/apache-tomcat-9.0.71/bin/*.sh 
 
     - name: copy the tomcat.service file to system directory
       copy: 
