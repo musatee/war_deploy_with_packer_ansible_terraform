@@ -1,0 +1,1 @@
+target ansible_host=172.31.52.61 ansible_user=target ansible_ssh_pass=12345678 ansible_connection=ssh 

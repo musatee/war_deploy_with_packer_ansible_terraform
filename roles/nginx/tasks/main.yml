@@ -1,0 +1,23 @@
+---
+# tasks file for nginx
+  - name: configuring nginx as proxy to tomcat service
+    block:
+  
+    - name: install nginx 
+      apt: 
+        name: nginx
+        state: latest 
+
+    - name: templating 
+      template: 
+        src: tomcat.conf.j2
+        dest: /etc/nginx/sites-available/tomcat.conf 
+
+    - name: create symbolic link for available sites
+      command: ln -s /etc/nginx/sites-available/tomcat.conf /etc/nginx/sites-enabled/
+      notify: 
+      - start_nginx
+    rescue:
+    - name: Making sure all tasks are done successfully
+      debug:
+        msg: "failed task on nginx configuration phase is {{ ansible_failed_task.name }}"

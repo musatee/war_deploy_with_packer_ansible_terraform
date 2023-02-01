@@ -1,0 +1,65 @@
+---
+# tasks file for tomcat
+  - name: Setting up minimal tomcat environment
+    block:
+    - name: update cache
+      apt: 
+        update_cache: true
+
+    - name: install default-jdk as java dependancy
+      apt: 
+        name: default-jdk
+        state: present 
+
+    - name: create user to run java program
+      user: 
+        name: tomcat
+        create_home: true
+        home: /opt/tomcat
+        system: true
+        group: tomcat
+        shell: /bin/false 
+
+    - name: Download tomcat archive
+      get_url: 
+        url: https://downloads.apache.org/tomcat/tomcat-9/v9.0.71/bin/apache-tomcat-9.0.71.tar.gz
+        dest: /opt/apache-tomcat-9.0.71.tar.gz
+
+    - name: create target untar directory
+      file: 
+        path: /opt/tomcat
+        state: directory
+
+    - name: Untar the archive 
+      unarchive:
+        src: /opt/apache-tomcat-9.0.71.tar.gz
+        dest: /opt/tomcat
+        remote_src: true
+
+    - name: create a symbolic link 
+      command: ln -s /opt/tomcat/apache-tomcat-9.0.71 /opt/tomcat/updated
+
+    - name: assign permission to directory
+      file: 
+        path: /opt/tomcat/*
+        state: directory
+        recurse: yes
+        owner: tomcat
+
+    - name: assign executable permission to all binaries
+      shell: chmod +x /opt/tomcat/updated/bin/*.sh 
+
+    - name: copy the tomcat.service file to system directory
+      copy: 
+        src: tomcat.service
+        dest: /etc/systemd/system/tomcat.service
+
+    - name: reload system daemon
+      shell: systemctl daemon-reload 
+      notify: 
+      - start_tomcat
+    rescue: 
+    - name: Making sure all tasks are done successfully
+      debug: 
+        msg: "failed task on tomcat environment setup phase is \"{{ ansible_failed_task.name }}\""
+
