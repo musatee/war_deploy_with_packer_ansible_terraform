@@ -14,7 +14,12 @@
         dest: /etc/nginx/sites-available/tomcat.conf 
 
     - name: create symbolic link for available sites
-      command: ln -s /etc/nginx/sites-available/tomcat.conf /etc/nginx/sites-enabled/
+      #command: ln -s /etc/nginx/sites-available/tomcat.conf /etc/nginx/sites-enabled/
+      file: 
+        src: /etc/nginx/sites-available/tomcat.conf
+        dest: /etc/nginx/sites-enabled
+        state: link 
+        force: true
       notify: 
       - start_nginx
     rescue:

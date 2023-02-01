@@ -37,7 +37,11 @@
         remote_src: true
 
     - name: create a symbolic link 
-      command: ln -s /opt/tomcat/apache-tomcat-9.0.71 /opt/tomcat/updated
+      #command: ln -s /opt/tomcat/apache-tomcat-9.0.71 /opt/tomcat/updated
+      file: 
+        src: /opt/tomcat/apache-tomcat-9.0.71
+        dest: /opt/tomcat/updated
+        state: link
 
     - name: assign permission to directory
       file: 
