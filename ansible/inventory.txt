@@ -1,1 +1,0 @@
-localhost ansible_host=127.0.0.1  ansible_user=test ansible_ssh_pass=12345678 ansible_connection=ssh 

@@ -10,6 +10,12 @@
       yum: 
         name: java-1.8*
         state: present 
+    - name: os release check
+      shell: cat /etc/os-release
+      register: result
+    - name: test purpose
+      debug: 
+        msg: "{{ result.stdout }}"
         
     - name: create tomcat group if not exists
       group: 

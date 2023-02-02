@@ -1,6 +1,6 @@
 ---
 - name: This is a playbook for setting up minimal tomcat environment & apache as reverse proxy to tomcat service
-  hosts: localhost
+  hosts: all
   become: true
   roles: 
   - roles/tomcat
